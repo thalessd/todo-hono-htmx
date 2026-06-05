@@ -1,0 +1,21 @@
+{
+  "name": "todo-hono-htmx",
+  "scripts": {
+    "css:build": "tailwindcss -i ./src/styles.css -o ./public/assets/app.css",
+    "css:watch": "tailwindcss -i ./src/styles.css -o ./public/assets/app.css --watch",
+    "js:build": "bun build ./src/client.ts --outfile ./public/assets/app.js --target browser",
+    "build": "bun run css:build && bun run js:build",
+    "dev": "bun run build && bun run --hot --port 4173 src/index.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "hono": "^4.12.23",
+    "htmx.org": "^2.0.10"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.0",
+    "@types/bun": "latest",
+    "daisyui": "^5.5.20",
+    "tailwindcss": "^4.3.0"
+  }
+}
