@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { serveStatic } from 'hono/bun'
 import { html } from 'hono/html'
 
+import { isHashedAssetPath, resolveAssets } from './assets'
 import { appPage } from './layouts/app-page'
 import {
   createTodo,
@@ -16,7 +17,20 @@ import { clearModal, deleteTodoModal, editTodoModal, todoApp } from './todos/vie
 
 const app = new Hono()
 
-app.use('/assets/*', serveStatic({ root: './public' }))
+app.use(
+  '/assets/*',
+  serveStatic({
+    root: './public',
+    onFound: (_path, c) => {
+      if (isHashedAssetPath(c.req.path)) {
+        c.header('Cache-Control', 'public, immutable, max-age=31536000')
+        return
+      }
+
+      c.header('Cache-Control', 'no-cache')
+    },
+  }),
+)
 
 const readTodoForm = async (request: Request) => {
   const form = await request.formData()
@@ -42,6 +56,7 @@ const parseId = (value: string) => {
 app.get('/', (c) => {
   return c.html(
     appPage({
+      assets: resolveAssets(),
       todos: listTodos(),
       stats: getTodoStats(),
     }),

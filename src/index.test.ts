@@ -1,7 +1,11 @@
-import { beforeEach, describe, expect, test } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 
 import app from './index'
 import { resetTodos } from './todos/repository'
+
+const originalNodeEnv = Bun.env.NODE_ENV
+const originalAssetManifestPath = Bun.env.ASSET_MANIFEST_PATH
+const manifestPath = './public/assets/test-manifest.json'
 
 const submitForm = (fields: Record<string, string>) => {
   const form = new FormData()
@@ -16,6 +20,16 @@ const submitForm = (fields: Record<string, string>) => {
 describe('todo app shell', () => {
   beforeEach(() => {
     resetTodos()
+    Bun.env.NODE_ENV = originalNodeEnv
+    Bun.env.ASSET_MANIFEST_PATH = originalAssetManifestPath
+  })
+
+  afterEach(async () => {
+    Bun.env.NODE_ENV = originalNodeEnv
+    Bun.env.ASSET_MANIFEST_PATH = originalAssetManifestPath
+    await Bun.file(manifestPath)
+      .delete()
+      .catch(() => undefined)
   })
 
   test('renders an empty todo app with local assets and htmx containers', async () => {
@@ -36,6 +50,49 @@ describe('todo app shell', () => {
     expect(html).toContain('hx-target="#todo-app"')
     expect(html).toContain('Nenhuma tarefa no turno')
     expect(html).not.toContain('cdn.jsdelivr.net')
+  })
+
+  test('renders hashed production assets from the manifest', async () => {
+    Bun.env.NODE_ENV = 'production'
+    Bun.env.ASSET_MANIFEST_PATH = manifestPath
+    await Bun.write(
+      manifestPath,
+      JSON.stringify({
+        css: '/assets/app.abc123def456.css',
+        js: '/assets/app.789abc012def.js',
+      }),
+    )
+
+    const response = await app.request('/')
+    const html = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(html).toContain('href="/assets/app.abc123def456.css"')
+    expect(html).toContain('src="/assets/app.789abc012def.js"')
+    expect(html).not.toContain('href="/assets/app.css"')
+    expect(html).not.toContain('src="/assets/app.js"')
+  })
+
+  test('sets conservative cache headers for stable development assets', async () => {
+    const response = await app.request('/assets/app.js')
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-cache')
+  })
+
+  test('sets immutable cache headers for hashed production assets', async () => {
+    await Bun.write('./public/assets/app.abc123def456.js', 'console.log("hashed")')
+
+    try {
+      const response = await app.request('/assets/app.abc123def456.js')
+
+      expect(response.status).toBe(200)
+      expect(response.headers.get('cache-control')).toBe('public, immutable, max-age=31536000')
+    } finally {
+      await Bun.file('./public/assets/app.abc123def456.js')
+        .delete()
+        .catch(() => undefined)
+    }
   })
 
   test('creates a todo from form data and escapes user content', async () => {

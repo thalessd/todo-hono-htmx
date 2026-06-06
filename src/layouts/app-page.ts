@@ -1,21 +1,23 @@
 import { html } from 'hono/html'
 
+import type { AssetPaths } from '../assets'
 import type { Todo, TodoStats } from '../todos/repository'
 import { todoApp } from '../todos/views'
 
 type AppPageProps = {
+  assets: AssetPaths
   todos: Todo[]
   stats: TodoStats
 }
 
-export const appPage = ({ todos, stats }: AppPageProps) => html`<!DOCTYPE html>
+export const appPage = ({ assets, todos, stats }: AppPageProps) => html`<!DOCTYPE html>
   <html lang="pt-BR" data-theme="night">
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Mesa de tarefas</title>
-      <link rel="stylesheet" href="/assets/app.css" />
-      <script type="module" src="/assets/app.js"></script>
+      <link rel="stylesheet" href="${assets.css}" />
+      <script type="module" src="${assets.js}"></script>
     </head>
     <body class="min-h-screen bg-base-200 text-base-content">
       <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8">

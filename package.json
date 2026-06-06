@@ -1,11 +1,15 @@
 {
   "name": "todo-hono-htmx",
   "scripts": {
+    "assets:build": "bun scripts/build-assets.ts",
+    "build:dev": "bun scripts/build-assets.ts --development",
+    "build:prod": "bun scripts/build-assets.ts --production",
+    "build": "bun run build:prod",
     "css:build": "tailwindcss -i ./src/styles.css -o ./public/assets/app.css",
     "css:watch": "tailwindcss -i ./src/styles.css -o ./public/assets/app.css --watch",
     "js:build": "bun build ./src/client.ts --outfile ./public/assets/app.js --target browser",
-    "build": "bun run css:build && bun run js:build",
-    "dev": "bun run build && bun run --hot src/server.ts",
+    "dev": "bun run build:dev && bun run --hot src/server.ts",
+    "start": "NODE_ENV=production bun src/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test"
   },

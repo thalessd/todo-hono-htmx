@@ -37,7 +37,7 @@ bun install
 
 ## Como Rodar
 
-Gere os assets locais e inicie o servidor:
+Em desenvolvimento, gere assets com nomes estáveis e inicie o servidor:
 
 ```sh
 bun run dev
@@ -55,13 +55,38 @@ Também é possível definir outra porta:
 PORT=3001 bun run dev
 ```
 
+Para simular a execução de produção depois de gerar assets com hash:
+
+```sh
+bun run build
+bun run start
+```
+
 ## Comandos
 
 ```sh
 bun run build
 ```
 
-Gera o CSS do Tailwind/daisyUI e o bundle local do HTMX.
+Gera assets de produção com hash de conteúdo e `public/assets/manifest.json`.
+
+```sh
+bun run build:dev
+```
+
+Gera assets estáveis de desenvolvimento em `/assets/app.css` e `/assets/app.js`.
+
+```sh
+bun run build:prod
+```
+
+Gera assets de produção em `/assets/app.<hash>.css` e `/assets/app.<hash>.js`.
+
+```sh
+bun run start
+```
+
+Inicia o servidor com `NODE_ENV=production`, fazendo o HTML usar os assets do manifest.
 
 ```sh
 bun run typecheck
@@ -83,6 +108,7 @@ src/
   index.ts               # App Hono e rotas HTML/HTMX
   server.ts              # Entry point do servidor Bun
   styles.css             # Tailwind CSS v4 e tema daisyUI
+  assets.ts              # Resolução de assets dev/prod
   layouts/
     app-page.ts          # Documento HTML completo
   todos/
@@ -96,6 +122,8 @@ src/
 - As rotas retornam HTML com `c.html(...)`.
 - Os templates usam `html` de `hono/html`.
 - O HTMX é instalado como `htmx.org` e empacotado em `/assets/app.js`.
+- Em desenvolvimento, os assets usam nomes estáveis para evitar um arquivo novo a cada reload.
+- Em produção, os assets usam hash no nome e podem ser servidos com cache longo. Para isso, rode o servidor com `NODE_ENV=production` ou use `bun run start`.
 - O projeto não usa JSX ou arquivos `.tsx`.
-- Arquivos em `public/assets/` são gerados por `bun run build` e não devem ser editados manualmente.
+- Arquivos em `public/assets/` são gerados por `bun run build:dev` ou `bun run build:prod` e não devem ser editados manualmente.
 - A persistência é propositalmente temporária para manter o exemplo simples.
