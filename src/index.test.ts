@@ -25,15 +25,16 @@ describe('todo app shell', () => {
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type') ?? '').toContain('text/html')
     expect(html).toContain('<!DOCTYPE html>')
-    expect(html).toContain('data-theme="todo-editorial"')
+    expect(html).toContain('data-theme="night"')
     expect(html).toContain('Mesa de tarefas')
+    expect(html).toContain('Sala noturna')
     expect(html).toContain('href="/assets/app.css"')
     expect(html).toContain('src="/assets/app.js"')
     expect(html).toContain('id="todo-app"')
     expect(html).toContain('id="modal-root"')
     expect(html).toContain('hx-post="/todos"')
     expect(html).toContain('hx-target="#todo-app"')
-    expect(html).toContain('Nenhuma tarefa no quadro')
+    expect(html).toContain('Nenhuma tarefa no turno')
     expect(html).not.toContain('cdn.jsdelivr.net')
   })
 
@@ -72,7 +73,7 @@ describe('todo app shell', () => {
 
     expect(response.status).toBe(400)
     expect(html).toContain('Informe um título para criar a tarefa.')
-    expect(html).toContain('Nenhuma tarefa no quadro')
+    expect(html).toContain('Nenhuma tarefa no turno')
     expect(html).not.toContain('Sem título')
   })
 
@@ -163,7 +164,7 @@ describe('todo app shell', () => {
     const html = await response.text()
 
     expect(response.status).toBe(200)
-    expect(html).toContain('Nenhuma tarefa no quadro')
+    expect(html).toContain('Nenhuma tarefa no turno')
     expect(html).not.toContain('Remover depois')
     expect(html).toContain('0 tarefas')
   })
