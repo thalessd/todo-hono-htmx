@@ -5,7 +5,8 @@
     "css:watch": "tailwindcss -i ./src/styles.css -o ./public/assets/app.css --watch",
     "js:build": "bun build ./src/client.ts --outfile ./public/assets/app.js --target browser",
     "build": "bun run css:build && bun run js:build",
-    "dev": "bun run build && bun run --hot --port 4173 src/index.ts",
+    "dev": "bun run build && bun run --hot src/server.ts",
+    "typecheck": "tsc --noEmit",
     "test": "bun test"
   },
   "dependencies": {
@@ -16,6 +17,8 @@
     "@tailwindcss/cli": "^4.3.0",
     "@types/bun": "latest",
     "daisyui": "^5.5.20",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "typed-htmx": "^0.3.1",
+    "typescript": "^6.0.3"
   }
 }

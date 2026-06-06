@@ -34,7 +34,7 @@ Tests use `bun:test`. Keep tests near the app in `src/*.test.ts`. Verify rendere
 
 ## Commit & Pull Request Guidelines
 
-No usable Git history is available in this workspace, so use concise imperative commit messages such as `Add dark daisyUI theme` or `Split HTMX partial templates`.
+Use Conventional Commits for all commit messages, such as `feat: add todo editing modal`, `fix: align modal fields`, `docs: update project readme`, or `test: cover todo deletion`.
 
 Pull requests should include a short summary, commands run, and screenshots for visible UI changes. Mention any changed routes, generated assets, or dependency updates.
 

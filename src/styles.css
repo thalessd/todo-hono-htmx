@@ -1,19 +1,71 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: dark --default;
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "todo-editorial";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: oklch(98% 0.018 91);
+  --color-base-200: oklch(94% 0.032 88);
+  --color-base-300: oklch(86% 0.044 82);
+  --color-base-content: oklch(21% 0.035 62);
+  --color-primary: oklch(31% 0.11 34);
+  --color-primary-content: oklch(98% 0.018 91);
+  --color-secondary: oklch(45% 0.095 190);
+  --color-secondary-content: oklch(98% 0.018 91);
+  --color-accent: oklch(66% 0.18 77);
+  --color-accent-content: oklch(19% 0.035 62);
+  --color-neutral: oklch(25% 0.03 64);
+  --color-neutral-content: oklch(98% 0.018 91);
+  --color-info: oklch(58% 0.12 225);
+  --color-info-content: oklch(98% 0.018 91);
+  --color-success: oklch(51% 0.13 145);
+  --color-success-content: oklch(98% 0.018 91);
+  --color-warning: oklch(72% 0.15 83);
+  --color-warning-content: oklch(20% 0.035 62);
+  --color-error: oklch(50% 0.19 28);
+  --color-error-content: oklch(98% 0.018 91);
+
+  --radius-selector: 0.35rem;
+  --radius-field: 0.35rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
 
 @layer base {
+  html {
+    background: var(--color-base-200);
+  }
+
   body {
-    font-family: Avenir, "Segoe UI", sans-serif;
+    font-family: "Aptos", "Segoe UI", sans-serif;
+    letter-spacing: 0;
+  }
+
+  .font-serif {
+    font-family: Georgia, "Times New Roman", serif;
   }
 }
 
 @layer utilities {
   .bg-base-200 {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: 28px 28px;
+      linear-gradient(135deg, oklch(31% 0.11 34 / 0.08) 0 1px, transparent 1px 18px),
+      radial-gradient(circle at 18% 12%, oklch(66% 0.18 77 / 0.18), transparent 32%),
+      radial-gradient(circle at 92% 8%, oklch(45% 0.095 190 / 0.12), transparent 30%);
+    background-attachment: fixed;
+    background-size:
+      18px 18px,
+      100% 100%,
+      100% 100%;
+  }
+
+  .shadow-xl {
+    box-shadow: 0 24px 70px oklch(21% 0.035 62 / 0.12);
   }
 }
