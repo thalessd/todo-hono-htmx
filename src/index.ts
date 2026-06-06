@@ -12,7 +12,7 @@ import {
   toggleTodo,
   updateTodo,
 } from './todos/repository'
-import { clearModal, editTodoModal, todoApp } from './todos/views'
+import { clearModal, deleteTodoModal, editTodoModal, todoApp } from './todos/views'
 
 const app = new Hono()
 
@@ -81,6 +81,17 @@ app.get('/todos/:id/edit', (c) => {
   return c.html(editTodoModal(todo))
 })
 
+app.get('/todos/:id/delete', (c) => {
+  const id = parseId(c.req.param('id'))
+  const todo = id ? getTodo(id) : undefined
+
+  if (!todo) {
+    return c.text('Tarefa não encontrada', 404)
+  }
+
+  return c.html(deleteTodoModal(todo))
+})
+
 app.put('/todos/:id', async (c) => {
   const id = parseId(c.req.param('id'))
   const todo = id ? getTodo(id) : undefined
@@ -107,7 +118,7 @@ app.delete('/todos/:id', (c) => {
     return c.text('Tarefa não encontrada', 404)
   }
 
-  return c.html(renderTodoApp())
+  return c.html(html`${renderTodoApp()}${clearModal()}`)
 })
 
 export default app

@@ -54,7 +54,9 @@ describe('todo app shell', () => {
     expect(html).toContain('0 concluídas')
     expect(html).toContain('hx-patch="/todos/1/toggle"')
     expect(html).toContain('hx-get="/todos/1/edit"')
-    expect(html).toContain('hx-delete="/todos/1"')
+    expect(html).toContain('hx-get="/todos/1/delete"')
+    expect(html).toContain('hx-target="#modal-root"')
+    expect(html).not.toContain('hx-confirm=')
     expect(html).not.toContain('<Revisar backlog>')
   })
 
@@ -131,6 +133,26 @@ describe('todo app shell', () => {
     expect(html).toContain('id="modal-root" hx-swap-oob="innerHTML"')
   })
 
+  test('returns a daisyUI modal for confirming todo deletion', async () => {
+    await app.request('/todos', {
+      method: 'POST',
+      body: submitForm({ title: 'Excluir com calma', notes: 'Validar modal' }),
+    })
+
+    const response = await app.request('/todos/1/delete')
+    const html = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(html).toContain('class="modal modal-open"')
+    expect(html).toContain('Excluir tarefa')
+    expect(html).toContain('Excluir com calma')
+    expect(html).toContain('Esta ação não pode ser desfeita.')
+    expect(html).toContain('hx-delete="/todos/1"')
+    expect(html).toContain('hx-target="#todo-app"')
+    expect(html).toContain('hx-swap="outerHTML"')
+    expect(html).not.toContain('hx-confirm=')
+  })
+
   test('deletes a todo and returns to the empty state', async () => {
     await app.request('/todos', {
       method: 'POST',
@@ -149,6 +171,7 @@ describe('todo app shell', () => {
   test('returns 404 for missing todos', async () => {
     const toggleResponse = await app.request('/todos/404/toggle', { method: 'PATCH' })
     const editResponse = await app.request('/todos/404/edit')
+    const deleteModalResponse = await app.request('/todos/404/delete')
     const updateResponse = await app.request('/todos/404', {
       method: 'PUT',
       body: submitForm({ title: 'Ausente', notes: '' }),
@@ -157,6 +180,7 @@ describe('todo app shell', () => {
 
     expect(toggleResponse.status).toBe(404)
     expect(editResponse.status).toBe(404)
+    expect(deleteModalResponse.status).toBe(404)
     expect(updateResponse.status).toBe(404)
     expect(deleteResponse.status).toBe(404)
   })

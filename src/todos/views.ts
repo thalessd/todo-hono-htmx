@@ -162,10 +162,9 @@ export const todoItem = (todo: Todo) => {
         <button
           type="button"
           class="btn btn-sm btn-error btn-outline"
-          hx-delete="/todos/${todo.id}"
-          hx-target="#todo-app"
-          hx-swap="outerHTML"
-          hx-confirm="Excluir esta tarefa?"
+          hx-get="/todos/${todo.id}/delete"
+          hx-target="#modal-root"
+          hx-swap="innerHTML"
         >
           Excluir
         </button>
@@ -219,6 +218,40 @@ export const editTodoModal = (todo: Todo, error?: string) => html`
           <button type="submit" class="btn btn-primary">Salvar alterações</button>
         </div>
       </form>
+    </div>
+    <div class="modal-backdrop" onclick="document.getElementById('modal-root').innerHTML = ''"></div>
+  </div>
+`
+
+export const deleteTodoModal = (todo: Todo) => html`
+  <div class="modal modal-open">
+    <div class="modal-box max-w-lg border border-error/20">
+      <div class="mb-5 inline-flex rounded-full bg-error/10 px-3 py-1 text-sm font-bold text-error">Ação destrutiva</div>
+      <h2 class="text-2xl font-black tracking-normal">Excluir tarefa</h2>
+      <p class="mt-2 text-sm leading-6 text-base-content/65">
+        Você está prestes a excluir <strong>${todo.title}</strong>. Esta ação não pode ser desfeita.
+      </p>
+
+      ${todo.notes
+        ? html`<div class="mt-5 rounded-md border border-base-content/10 bg-base-200 p-4 text-sm text-base-content/70">
+            <p class="line-clamp-3 whitespace-pre-wrap break-words">${todo.notes}</p>
+          </div>`
+        : ''}
+
+      <div class="modal-action mt-6">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('modal-root').innerHTML = ''">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-error"
+          hx-delete="/todos/${todo.id}"
+          hx-target="#todo-app"
+          hx-swap="outerHTML"
+        >
+          Excluir definitivamente
+        </button>
+      </div>
     </div>
     <div class="modal-backdrop" onclick="document.getElementById('modal-root').innerHTML = ''"></div>
   </div>
