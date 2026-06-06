@@ -4,6 +4,8 @@ Este repositório é um código de exemplo para demonstrar uma TODO List server-
 
 O objetivo é mostrar como essas tecnologias podem trabalhar juntas em um projeto pequeno, sem SPA, sem JSX e sem persistência real em arquivo. Este projeto não é uma base pronta para produção.
 
+![Apresentação Visual da Interface](./.github/assets/screenshot.png)
+
 ## Tecnologias
 
 - **Bun**: runtime, package manager, bundler e test runner.
