@@ -64,6 +64,17 @@ bun run build
 bun run start
 ```
 
+### Rodando com Docker Compose
+
+Caso queira rodar a aplicação em um container isolado sem precisar instalar o Bun localmente, você pode usar o Docker Compose:
+
+```sh
+docker compose up --build
+```
+
+A aplicação estará disponível em `http://localhost:3000`.
+
+
 ## Comandos
 
 ```sh
